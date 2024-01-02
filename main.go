@@ -94,6 +94,17 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSend(m.ChannelID, sendErr.Error())
 			return
 		}
+	case Command("scoreboard"):
+		res, err := Scoreboard(words)
+		if err != nil {
+			s.ChannelMessageSend(m.ChannelID, err.Error())
+			return
+		}
+		_, sendErr := s.ChannelMessageSendEmbed(m.ChannelID, res)
+		if sendErr != nil {
+			s.ChannelMessageSend(m.ChannelID, sendErr.Error())
+			return
+		}
 	}
 
 }

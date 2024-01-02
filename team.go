@@ -8,10 +8,11 @@ type TeamStruct struct {
 	ID        string     `json:"id"`
 	Name      string     `json:"displayName"`
 	Color     string     `json:"color"`
-	Logos     []Link     `json:"logos"`
-	Record    TeamRecord `json:"record"`
+	Logos     []Link     `json:"logos,omitempty"`
+	Record    TeamRecord `json:"record,omitempty"`
 	Links     []Link     `json:"links"`
-	NextEvent []Game     `json:"nextEvent"`
+	Logo      string     `json:"logo,omitempty"`
+	NextEvent []Game     `json:"nextEvent,omitempty"`
 }
 
 type Link struct {

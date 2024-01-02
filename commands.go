@@ -22,6 +22,37 @@ func (cmdErr CommandError) Error() string {
 
 var APIBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/"
 
+func Scoreboard(words []string) (*discordgo.MessageEmbed, error) {
+	endpointURL := APIBaseURL + "scoreboard"
+	response, err := http.Get(endpointURL)
+	if err != nil {
+		fmt.Println("endpoint err")
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var scoreboardData ScoreboardStruct
+
+	err = json.Unmarshal(body, &scoreboardData)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(scoreboardData)
+
+	embed := &discordgo.MessageEmbed{
+		Title:       "Woohoo!",
+		Description: "Successfully unmarshalled json",
+	}
+
+	return embed, nil
+}
+
 func Team(words []string) (*discordgo.MessageEmbed, error) {
 
 	if len(words) < 2 {
@@ -118,6 +149,7 @@ func Team(words []string) (*discordgo.MessageEmbed, error) {
 
 	description := fmt.Sprintf("**Next Game (%s):**\n", team.NextEvent[0].Date[:10]) + team.NextEvent[0].Name + "\n\n"
 	description += "**Streak:**\n" + streakString + "\n\n** **"
+
 	embed := &discordgo.MessageEmbed{
 		Title:       team.Name,
 		Description: description,
